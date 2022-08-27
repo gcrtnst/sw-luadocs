@@ -1,0 +1,295 @@
+# Vehicles
+
+Spawns a vehicle component from a specific addon. See getLocationComponentData() for info on how to get component_id.
+
+```lua
+vehicle_id, is_success = server.spawnAddonVehicle(transform_matrix, addon_index, component_id)
+```
+
+Spawns a vehicle from local appdata using its file name.
+
+```lua
+vehicle_id, is_success = server.spawnVehicle(transform_matrix, save_name)
+```
+
+Sets a vehicle to depsawn when out of a player's range. If is_instant the vehicle will instantly despawn no matter the player's proximity.
+
+```lua
+is_success = server.despawnVehicle(vehicle_id, is_instant)
+```
+
+Gets the world position of the center of a vehicle's main body. Optionally passing a voxel position will return the world position of the specified voxel on the vehicle.
+
+```lua
+transform_matrix, is_success = server.getVehiclePos(vehicle_id, [voxel_x, voxel_y, voxel_z])
+```
+
+Teleports the specified vehicle to the target world position.
+
+```lua
+is_success = server.setVehiclePos(vehicle_id, transform_matrix)
+```
+
+Teleports the specified vehicle to the target world position. The vehicle is displaced by other vehicles at the arrival point.
+
+```lua
+is_success = server.setVehiclePosSafe(vehicle_id, transform_matrix)
+```
+
+Checks if a zone of size xyz is clear of vehicles at the provided transform.
+
+```lua
+is_success = server.isLocationClear(transform_matrix, x, y, z)
+```
+
+Reloads the vehicle as if spawning from a workbench, refreshing damage and inventories ect.
+
+```lua
+is_success = server.resetVehicleState(vehicle_id)
+```
+
+Gets a vehicle's file name.
+
+```lua
+name, is_success = server.getVehicleName(vehicle_id)
+```
+
+Gets general data for a vehicle. Including a list of attached character objects and any tags assigned from an addon.
+
+```lua
+VEHICLE_DATA, is_success = server.getVehicleData(vehicle_id)
+	VEHICLE_DATA = {
+		["tags_full"] = tags, 
+		["tags"] = { [i] = tag },
+		["filename"] = vehicle_file_name,
+		["transform"] = transform_matrix, 
+		["simulating"] = is_simulating,
+		["mass"] = mass, 
+		["characters"] = { char_id, char_id... } 
+		["voxels"] = voxel count, 
+		["editable"] = is_editable, 
+		["invulnerable"] = is_invulnerable, 
+		["static"] = is_static, 
+		["components"] = { 
+			["seats"] = { [i] = {name, seated_id, pos = { x = voxel_x, y = voxel_y, z = voxel_z } }, 
+			["buttons"] = { [i] = {name, on, pos = { x = voxel_x, y = voxel_y, z = voxel_z } }, 
+			["signs"] = { [i] = {name, pos = { x = voxel_x, y = voxel_y, z = voxel_z } } 
+		}
+	}
+	
+
+```
+
+Cleans up all player spawned vehicles.
+
+```lua
+server.cleanVehicles()
+```
+
+Cleans up all fallout zones.
+
+```lua
+server.clearRadiation()
+```
+
+Override the inputs to the first seat of the specified name found on the specified vehicle. A seated player will prevent overrides.
+
+```lua
+server.setVehicleSeat(vehicle_id, seat_name, axis_w, axis_d, axis_up, axis_right, button1, button2, button3, button4, button5, button6, trigger)
+```
+
+Applies a press action to the first button of the specified name found on the specified vehicle.
+
+```lua
+server.pressVehicleButton(vehicle_id, button_name)
+```
+
+Returns the state of the first button of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleButton(vehicle_id, button_name)
+```
+
+```lua
+DATA = {
+		["on"] = is_on, 
+	}
+
+```
+
+Returns the voxel position of the first sign of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleSign(vehicle_id, sign_name)
+```
+
+```lua
+DATA = {
+		["pos"] = { x = voxel_x, y = voxel_y, z = voxel_z }, 
+	}
+
+```
+
+Applies a set number action to the first keypad of the specified name found on the specified vehicle.
+
+```lua
+server.setVehicleKeypad(vehicle_id, keypad_name, value)
+```
+
+Returns the value of the first dial of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleDial(vehicle_id, dial_name)
+```
+
+```lua
+DATA = {
+		["value"] = value_primary, 
+		["value2"] = value_secondary, 
+	}
+
+```
+
+Applies a set fluid action to the first tank of the specified name found on the specified vehicle.
+
+```lua
+server.setVehicleTank(vehicle_id, tank_name, amount, FLUID_TYPE)
+	FLUID_TYPE |
+	0 = fresh water,
+	1 = diesel,
+	2 = jet fuel,
+	3 = air,
+	4 = exhaust,
+	5 = oil,
+	6 = sea water,
+	7 = steam,
+
+```
+
+Returns the value of the first tank of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleTank(vehicle_id, tank_name)
+```
+
+```lua
+DATA = {
+		["value"] = current_level, 
+		["capacity"] = total_capacity, 
+		["fluid_type"] = FLUID_TYPE, 
+	}
+
+```
+
+Sets the number of coal objects inside a hopper of the specified name found on the specified vehicle.
+
+```lua
+server.setVehicleHopper(vehicle_id, hopper_name, amount)
+```
+
+Returns the coal count of the first hopper of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleHopper(vehicle_id, hopper_name)
+```
+
+```lua
+DATA = {
+		["value"] = current_level, 
+		["capacity"] = total_capacity, 
+	}
+
+```
+
+Applies a set charge action to the first battery of the specified name found on the specified vehicle. 0 to 1 range.
+
+```lua
+server.setVehicleBattery(vehicle_id, battery_name, amount)
+```
+
+Returns the data of the first battery of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleBattery(vehicle_id, battery_name)
+```
+
+```lua
+DATA = {
+		["charge"] = current_charge, 
+	}
+
+```
+
+Applies a set ammo action to the first weapon component of the specified name found on the specified vehicle. 0 to 1 range.
+
+```lua
+server.setVehicleWeapon(vehicle_id, name, amount)
+```
+
+Returns the data of the first weapon component of the specified name found on the specified vehicle.
+
+```lua
+DATA, is_success = server.getVehicleWeapon(vehicle_id, name)
+```
+
+```lua
+DATA = {
+		["ammo"] = current_ammo, 
+		["capacity"] = total_ammo_capacity, 
+	}
+
+```
+
+Get the number of burning surfaces on a specified vehicle.
+
+```lua
+surface_count, is_success = server.getVehicleFireCount(vehicle_id)
+```
+
+Set the default block tooltip of a vehicle to display some text. Blocks with unique tooltips (e.g. buttons) will override this tooltip.
+
+```lua
+is_success = server.setVehicleTooltip(vehicle_id, text)
+```
+
+Applies impact damage to a vehicle at the specified voxel location. Damage range is 0-100. Radius is in meters.
+
+```lua
+is_success = server.addDamage(vehicle_id, damage, voxel_x, voxel_y, voxel_z, radius)
+```
+
+Returns whether the specified vehicle has finished loading and is simulating.
+
+```lua
+is_simulating, is_success = server.getVehicleSimulating(vehicle_id)
+```
+
+Returns whether the specified vehicle is loading, simulating or unloading.
+
+```lua
+is_local, is_success = server.getVehicleLocal(vehicle_id)
+```
+
+Sets a vehicle's global transponder to active. (All vehicles have a global transponder that can be active even if a vehicle is not loaded).
+
+```lua
+is_success = server.setVehicleTransponder(vehicle_id, is_active)
+```
+
+Sets a vehicle to be editable by players. If a vehicle is spawned by a script it will not have a parent workbench until edited by one (Edit vehicle in zone).
+
+```lua
+is_success = server.setVehicleEditable(vehicle_id, is_editable)
+```
+
+Sets a vehicle to be invulnerable to damage.
+
+```lua
+is_success = server.setVehicleInvulnerable(vehicle_id, is_invulnerable)
+```
+
+Sets a vehicle to show on the map.
+
+```lua
+is_success = server.setVehicleShowOnMap(vehicle_id, is_show_on_map)
+```
