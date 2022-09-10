@@ -1,0 +1,80 @@
+head Callback Functions
+body Listed below are callback functions that can be added to a script and are automatically called when their specific conditions are met, the simplest callback function is onTick which is automatically called every game tick.
+body Called every game tick. game_ticks refers to the number of ticks that have passed this frame (normally 1, while sleeping 400).
+code function onTick(game_ticks)
+body onCreate is called when the script is initialized (whenever creating or loading a world. is_world_create is true only on world generate (first load).
+code function onCreate(is_world_create)
+body onDestroy is called whenever the world is exited.
+code function onDestroy()
+body onCustomCommand is called when a command is typed into chat. full_message contains the entire message including spaces, command contains the first parameter including the ? e.g. ?teleport, args ... represents the variadic arguments of the command (can also be explicitly declared, see example below)
+code function onCustomCommand(full_message, user_peer_id, is_admin, is_auth, command, args ...)
+body onChatMessage is called when a chat message is posted.
+code function onChatMessage(peer_id, sender_name, message)
+body onPlayerJoin is called when a player joins the game.
+code function onPlayerJoin(steam_id, name, peer_id, is_admin, is_auth)
+body onPlayerSit is called when a player sits in a seat.
+code function onPlayerSit(peer_id, vehicle_id, seat_name)
+body onPlayerUnsit is called when a player gets out of a seat.
+code function onPlayerUnsit(peer_id, vehicle_id, seat_name)
+body onCharacterSit is called when any character (including players) sits in a seat.
+code function onCharacterSit(object_id, vehicle_id, seat_name)
+body onCharacterUnsit is called when a any character (including players) gets out of a seat.
+code function onCharacterUnsit(object_id, vehicle_id, seat_name)
+body onPlayerRespawn is called when a player respawns.
+code function onPlayerRespawn(peer_id)
+body onPlayerLeave is called when a player leaves the game.
+code function onPlayerLeave(steam_id, name, peer_id, is_admin, is_auth)
+body onToggleMap is called when a player opens/closes the map. is_open represents whether their map is open.
+code function onToggleMap(peer_id, is_open)
+body onPlayerDie is called when a player dies.
+code function onPlayerDie(steam_id, name, peer_id, is_admin, is_auth)
+body onVehicleSpawn is called when a vehicle is spawned. If vehicle is spawned by a script peer_id will be -1. Spawned vehicles must still load locally so they can begin simulating for players. x, y, z are the spawn coordinates in world space. Cost is currently only calculated for player spawned vehicles.
+code function onVehicleSpawn(vehicle_id, peer_id, x, y, z, cost)
+body onVehicleDespawn is called when a vehicle is despawned. If vehicle is despawned by a script peer_id will be -1.
+code function onVehicleDespawn(vehicle_id, peer_id)
+body onVehicleLoad is called when a vehicle has loaded and is ready to simulate.
+code function onVehicleLoad(vehicle_id)
+body onVehicleUnload is called when a vehicle has unloaded and is no longer simulating.
+code function onVehicleUnload(vehicle_id)
+body onVehicleTeleport is called when a vehicle is teleported or returned to workbench. If vehicle is teleported by a script peer_id will be -1. x,y,z are the destination coordinates in world space.
+code function onVehicleTeleport(vehicle_id, peer_id, x, y, z)
+body onObjectLoad is called when an object (character/prop/animal) has loaded and is ready to simulate.
+code function onObjectLoad(object_id)
+body onObjectUnload is called when an object (character/prop/animal) has unloaded and is no longer simulating.
+code function onObjectUnload(object_id)
+body onButtonPress is called when a button is interacted with (still triggers on locked buttons). To get a button's current state please use getVehicleButton()
+code function onButtonPress(vehicle_id, peer_id, button_name, is_pressed)
+body onSpawnAddonComponent is called when a vehicle or object is spawned by a script. addon_index is the internal index of the addon the object was spawned from (see mission functions below)
+code function onSpawnAddonComponent(object_id/vehicle_id, component_name, TYPE_STRING, addon_index)
+code 
+.... 	TYPE_STRING |
+.... 	"zone",
+.... 	"object",
+.... 	"character",
+.... 	"vehicle",
+.... 	"flare",
+.... 	"fire",
+.... 	"loot",
+.... 	"button",
+.... 	"animal"
+.... 	"ice"
+body onVehicleDamaged is called when a vehicle is damaged or repaired. Damage amount will be negative if the component is repaired. The voxel parameters refer to the voxel position on the vehicle that sustained the damage relative to the origin of the vehicle. body_index is 0 for the main vehicle body, checking this parameter may be helpful for vehicles with sub bodies such as missiles that should be ignored.
+code function onVehicleDamaged(vehicle_id, damage_amount, voxel_x, voxel_y, voxel_z, body_index)
+body httpReply is called when a HTTP request has returned. The callback details the request and the received reply.
+code function httpReply(port, request, reply))
+body onFireExtinguished is called when a fire is extinguished. The returned coordinates represent the fire's world coordinates.
+code function onFireExtinguished(fire_x, fire_y, fire_z)
+body onForestFireSpawned is called when 5 or more trees are detected to be on fire within a small radius. The returned coordinates represent the fire's world coordinates. The objective ID is used to track separate forest fire events.
+code function onForestFireSpawned(fire_objective_id, fire_x, fire_y, fire_z)
+body onForestFireExtinguished is called when all trees within a forest fire objective have been extinguished. The returned coordinates represent the fire's world coordinates. The objective ID is used to track separate forest fire events.
+code function onForestFireExtinguished(fire_objective_id, fire_x, fire_y, fire_z)
+body Called when a tornado is spawned.
+code function onTornado(transform)
+body Called when a meteor is spawned.
+code function onMeteor(transform, magnitude)
+body Called when a tsunami is spawned.
+code function onTsunami(transform, magnitude)
+body Called when a whirlpool is spawned.
+code function onWhirlpool(transform, magnitude)
+body Called when a volcano is triggered.
+code function onVolcano(transform)
