@@ -1,0 +1,49 @@
+head Main Menu Properties
+body The following functions will add editable UI elements to the Addon script selector when starting a new game. These functions will return null unless the game was started through the new game screen, so it is recommended to use them in onCreate while is_world_create is true OR in g_savedata where the nil value will be overwritten with the saved value on subsequent loads of the game.
+body A simple boolean checkbox.
+code property.checkbox(text, default_value)
+body A slider that is limited between two numbers.
+code property.slider(text, min, max, increment, default_value)
+head Http
+body Send a Http request.
+code server.httpGet(port, request)
+head Admin
+body Ban a player.
+code server.banPlayer(peer_id)
+body Kick a player.
+code server.kickPlayer(peer_id)
+body Give a player Admin.
+code server.addAdmin(peer_id)
+body Remove Admin from a player.
+code server.removeAdmin(peer_id)
+body Give a player Auth.
+code server.addAuth(peer_id)
+body Remove Auth from a player.
+code server.removeAuth(peer_id)
+body Send a save command for dedicated server, with optional save name parameter.
+code server.save((save_name))
+head Misc
+body Get system time in ms (Can be used for random seeding).
+code system_time = server.getTimeMillisec()
+head Developer
+body Get whether the game considers the tutorial active (Default missions check this before they spawn).
+code tutorial_completed = server.getTutorial()
+body Sets whether the game considers the tutorial active (useful if you are making your own tutorial).
+code server.setTutorial()
+body Gets whether the player has acknowledged the video tutorials (useful if you are making your own tutorial) Returns true on a dedicated server.
+code video_tutorial_completed = server.getVideoTutorial()
+body Returns true if the host player is a developer of the game.
+code is_dev = server.isDev()
+body Returns true if the server has the Search and Destroy DLC active.
+code is_enabled = server.dlcWeapons()
+body Returns true if the server has the Industrial Frontier DLC active.
+code is_enabled = server.dlcArid()
+body Returns the ID of the currently active seasonal event.
+code EVENT_ID = server.getSeasonalEvent()
+code 
+.... 	EVENT_ID = {
+.... 		0 = NONE,
+.... 		1 = Halloween,
+.... 		2 = Christmas,
+.... 	}
+.... 
