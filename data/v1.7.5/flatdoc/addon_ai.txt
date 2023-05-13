@@ -1,0 +1,87 @@
+head AI
+body Lua AI can be run on any character, and their resulting actions are dictated by their state and the AI Type of the seat they are attached to.
+body Gun components and Camera components can be linked to a seat by naming them identically. 
+body Sets the AI state for a character object.
+code server.setAIState(object_id, AI_STATE)
+.... 
+.... 	SEAT TYPE = Ship Pilot
+.... 		AI_STATE |
+.... 		0 = none,
+.... 		1 = path to destination,
+.... 
+.... 	SEAT TYPE = Helicopter Pilot
+.... 		AI_STATE |
+.... 		0 = none,
+.... 		1 = path to destination,
+.... 		2 = path to destination accurate (smaller increments for landing/takeoff),
+.... 		3 = gun run (Fly at target and press the trigger hotkey when locked on),
+.... 
+.... 	SEAT TYPE = Plane Pilot
+.... 		AI_STATE |
+.... 		0 = none,
+.... 		1 = path to destination,
+.... 		2 = gun run (Fly at target and press the trigger hotkey when locked on),
+.... 
+.... 	SEAT TYPE = Gunner
+.... 		AI_STATE |
+.... 		0 = none,
+.... 		1 = fire at target (Accounts for bullet drop / effective range when pulling the trigger),
+.... 
+.... 	SEAT TYPE = Designator
+.... 		AI_STATE |
+.... 		0 = none,
+.... 		1 = aim at target (Pulls the trigger when looking directly at target),
+.... 
+body Seat Outputs:
+code 
+.... 	SEAT TYPE = Ship Pilot
+.... 		Hotkey 1 = Engine On
+.... 		Hotkey 2 = Engine Off
+.... 		Axis W = Throttle
+.... 		Axis D = Steering
+.... 
+.... 	SEAT TYPE = Helicopter Pilot
+.... 		Hotkey 1 = Engine On 
+.... 		Hotkey 2 = Engine Off
+.... 		Axis W = Pitch
+.... 		Axis D = Roll
+.... 		Axis Up = Collective
+.... 		Axis Right = Yaw
+.... 		Trigger = Shoot
+.... 
+.... 	SEAT TYPE = Plane Pilot
+.... 		Hotkey 1 = Engine On 
+.... 		Hotkey 2 = Engine Off
+.... 		Axis W = Pitch
+.... 		Axis D = Roll
+.... 		Axis Up = Throttle
+.... 		Axis Right = Yaw
+.... 		Trigger = Shoot
+.... 
+.... 	SEAT TYPE = Gunner
+.... 		Axis W = Pitch
+.... 		Axis D = Yaw
+.... 		Trigger = Shoot
+.... 
+.... 	SEAT TYPE = Designator
+.... 		Axis W = Pitch
+.... 		Axis D = Yaw
+.... 		Trigger = Designate
+.... 
+body Sets the target destination for an AI.
+code server.setAITarget(object_id, matrix_destination)
+body Gets the target destination for an AI. Returns nil on failure.
+code TARGET_DATA = server.getAITarget(object_id)
+code 
+.... 	TARGET_DATA = {
+.... 		["character"] = target character object id,
+.... 		["vehicle"] = target vehicle id,
+.... 		["x"] = target_x,
+.... 		["y"] = target_y,
+.... 		["z"] = target_z,
+.... 	}
+.... 
+body Sets the target character for an AI. Different AIs use this data for their unique tasks.
+code server.setAITargetCharacter(object_id, target_object_id)
+body Sets the target vehicle for an AI. Different AIs use this data for their unique tasks.
+code server.setAITargetVehicle(object_id, target_vehicle_id)
