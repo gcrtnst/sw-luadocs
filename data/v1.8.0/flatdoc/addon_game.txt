@@ -1,0 +1,154 @@
+head Game
+body Attempts to spawn a tsunami epicentered at the target transform, only one tsunami/whirlpool can be active at a time; stronger events will override weaker ones. Magnitude ranges from 0-1.
+code is_success = server.spawnTsunami(transform_matrix, magnitude)
+body Attempts to spawn a whirlpool near to the target transform, can fail based on ocean depth, only one tsunami/whirlpool can be active at a time; stronger events will override weaker ones. Magnitude ranges from 0-1.
+code is_success = server.spawnWhirlpool(transform_matrix, magnitude)
+body Cancels the active ocean gerstner wave event (tsunami or whirlpool).
+code server.cancelGerstner()
+body Spawns a tornado at the target transform.
+code is_success = server.spawnTornado(transform_matrix)
+body Spawns a meteor to land at the target transform. Magnitude ranges from 0-1 and scales the main meteor up to 20x default size.
+code is_success = server.spawnMeteor(transform_matrix, magnitude, is_spawn_tsunami)
+body Spawns a meteor to land at the target location, preceded by several smaller meteors. Magnitude ranges from 0-1 and scales the main meteor up to 20x default size, this magnitude also increases the number of secondary meteors spawned.
+code is_success = server.spawnMeteorShower(transform_matrix, magnitude, is_spawn_tsunami)
+body Activates the closest volcano if the volcano tile is in simulation range.
+code is_success = server.spawnVolcano(transform_matrix)
+body Get a list of volcano data.
+code VOLCANOS = server.getVolcanos()
+code 
+.... 	VOLCANOS = {
+.... 		x = volcano world x
+.... 		y = volcano world y
+.... 		z = volcano world z
+.... 		tile_x = tile grid x
+.... 		tile_y = tile grid z
+.... 	}
+.... 
+body Gets the blended oil amount at the target location.
+code oil_amount = server.getOilSpill(transform_matrix)
+body Sets the oil spill amount at the target location, this amount is blended across nearby tiles.
+code server.setOilSpill(transform_matrix, amount)
+body [Requires Search and Destroy DLC to be enabled] Spawn an explosion at the specified world position matrix.
+code server.spawnExplosion(transform_matrix, magnitude)
+body Set a game setting.
+code server.setGameSetting(GAME_SETTING, value)
+body Returns a table of the game settings indexed by the GAME_SETTING string, this can be accessed inline eg. server.getGameSettings().third_person
+code {[GAME_SETTING] = value} = server.getGameSettings()
+code 
+.... 	GAME_SETTING |
+.... 	"third_person",
+.... 	"third_person_vehicle",
+.... 	"vehicle_damage",
+.... 	"player_damage",
+.... 	"npc_damage",
+.... 	"sharks",
+.... 	"fast_travel",
+.... 	"teleport_vehicle",
+.... 	"rogue_mode",
+.... 	"auto_refuel",
+.... 	"megalodon",
+.... 	"map_show_players",
+.... 	"map_show_vehicles",
+.... 	"show_3d_waypoints",
+.... 	"show_name_plates",
+.... 	"day_night_length", -- currently cannot be written to
+.... 	"sunrise", -- currently cannot be written to
+.... 	"sunset", -- currently cannot be written to
+.... 	"infinite_money",
+.... 	"settings_menu",
+.... 	"unlock_all_islands",
+.... 	"infinite_batteries",
+.... 	"infinite_fuel",
+.... 	"engine_overheating",
+.... 	"no_clip",
+.... 	"map_teleport",
+.... 	"cleanup_vehicle",
+.... 	"clear_fow", -- clear fog of war
+.... 	"vehicle_spawning",
+.... 	"photo_mode",
+.... 	"respawning",
+.... 	"settings_menu_lock",
+.... 	"despawn_on_leave", -- despawn player characters when they leave a server
+.... 	"unlock_all_components",
+.... 	"override_weather",
+.... 	
+body Set game money and research points.
+code server.setCurrency(money, research_points)
+body Get game money.
+code amount = server.getCurrency()
+body Get game research points.
+code amount = server.getResearchPoints()
+body Get number of days since game start.
+code days_survived = server.getDateValue()
+body Get the current game date.
+code d, m, y = server.getDate()
+body Get the current game time.
+code CLOCK = server.getTime()
+.... 	CLOCK = {
+.... 		["hour"] = hour (24),
+.... 		["minute"] = minute (60),
+.... 		["daylight_factor"] = midday factor (0-1),
+.... 		["percent"] = day_cycle_percent (0-1),
+.... 	}
+.... 
+body Get the current game weather at a location.
+code WEATHER = server.getWeather(transform_matrix)
+.... 	WEATHER = {
+.... 		["fog"] = fog factor (0-1),
+.... 		["rain"] = rain factor (0-1),
+.... 		["snow"] = snow factor (0-1),
+.... 		["wind"] = wind factor (0-1),
+.... 		["temp"] = temp factor (0-1),
+.... 	}
+.... 
+body Sets the custom weather override values (0-1).
+code server.setWeather(fog, rain, wind)
+body Sets the target audio mood. Mood naturally decreases over time. -1 for all peers.
+code server.setAudioMood(peer_id, AUDIO_MOOD)
+.... 	AUDIO_MOOD |
+.... 		0 = none, (Cannot be set)
+.... 		1 = main_menu, (Cannot be set)
+.... 		2 = mood_normal,
+.... 		3 = mood_mission_mid,
+.... 		4 = mood_mission_high,
+.... 
+body Returns the world position of a random ocean tile within the selected search range.
+code transform_matrix, is_success = server.getOceanTransform(transform_matrix, min_search_range, max_search_range)
+body Returns the generated ocean floor height offset of a tile. This is not terrain height and does not include mesh height. It is advised to only use this for ocean tiles. Example return value: -375
+code height = server.getOceanFloor(transform_matrix)
+body Returns the world position of a random tile of type tile_name closest to the supplied location. Optional search radius defaults to 50000.
+code transform_matrix, is_success = server.getTileTransform(transform_matrix, tile_name, [search_radius])
+body Returns the data for the tile at the specified location.
+code TILE_DATA, is_success = server.getTile(transform)
+code 
+.... 	TILE_DATA = {
+.... 		["name"] = tile_name, 
+.... 		["sea_floor"] = sea_floor_height, 
+.... 		["cost"] = purchase_cost, 
+.... 		["purchased"] = is_purchased, 
+.... 	}
+.... 
+body Returns the data for the tile selected as the start tile in the game settings.
+code TILE_DATA = server.getStartTile()
+code 
+.... 	TILE_DATA = {
+.... 		["name"] = tile_name, 
+.... 		["x"] = tile_x, 
+.... 		["y"] = tile_y, 
+.... 		["z"] = tile_z, 
+.... 	}
+.... 
+body Returns whether the tile at the given world coordinates is player owned.
+code is_purchased = server.getTilePurchased(transform_matrix)
+body Returns the current inventory amounts for the tile resource depot.
+code coal, uranium, diesel, jet_fuel = server.getTileInventory(transform_matrix)
+body Sets the inventory amounts for the tile resource depot.
+code server.setTileInventory(transform_matrix, coal, uranium, diesel, jet_fuel)
+body Returns whether matrix_object is within zone_size of matrix_zone.
+code is_in_area = server.isInTransformArea(matrix_object, matrix_zone, zone_size_x, zone_size_y, zone_size_z)
+body Returns a table of waypoints that form a path from start to end, matching the required tags, tags should be separated by commas with no spaces.
+code { [i] = {x = world_x, z = world_z} } = server.pathfind(matrix_start, matrix_end, required_tags, avoided_tags)
+body Returns a table of waypoints tagged with ocean_path, that form a path from start to end. This function is the same as passing 'ocean_path' to the function above.
+code { [i] = {x = world_x, z = world_z} } = server.pathfindOcean(matrix_start, matrix_end)
+body Returns a table of underground oil deposit positions.
+code { [i] = {x = world_x, y = world_y, z = world_z, r = radius, oil = current_oil} } = server.getOilDeposits()
