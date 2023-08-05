@@ -1,0 +1,267 @@
+head Vehicles
+body Spawns a vehicle component from a specific addon. See getLocationComponentData() for info on how to get component_id.
+code vehicle_id, is_success = server.spawnAddonVehicle(transform_matrix, addon_index, component_id)
+body Spawns a vehicle from local appdata using its file name.
+code vehicle_id, is_success = server.spawnVehicle(transform_matrix, save_name)
+body Sets a vehicle to despawn when out of a player's range. If is_instant the vehicle will instantly despawn no matter the player's proximity.
+code is_success = server.despawnVehicle(vehicle_id, is_instant)
+body Gets the world position of the center of a vehicle's main body. Optionally passing a voxel position will return the world position of the specified voxel on the vehicle.
+code transform_matrix, is_success = server.getVehiclePos(vehicle_id, [voxel_x, voxel_y, voxel_z])
+body Teleports the specified vehicle to the target world position.
+code is_success = server.setVehiclePos(vehicle_id, transform_matrix)
+body Teleports the specified vehicle to the target world position. The vehicle is displaced by other vehicles at the arrival point.
+code is_success, result_matrix = server.setVehiclePosSafe(vehicle_id, transform_matrix)
+body Checks if a zone of size xyz is clear of vehicles at the provided transform.
+code is_success = server.isLocationClear(transform_matrix, x, y, z)
+body Reloads the vehicle as if spawning from a workbench, refreshing damage and inventories ect.
+code is_success = server.resetVehicleState(vehicle_id)
+body Gets a vehicle's file name.
+code name, is_success = server.getVehicleName(vehicle_id)
+body Cleans up all player spawned vehicles.
+code server.cleanVehicles()
+body Cleans up all fallout zones.
+code server.clearRadiation()
+body Gets general data for a vehicle. Including a list of attached character objects and any tags assigned from an addon.
+code VEHICLE_DATA, is_success = server.getVehicleData(vehicle_id)
+.... 	VEHICLE_DATA = {
+.... 		["tags_full"] = tags, 
+.... 		["tags"] = { [i] = tag },
+.... 		["filename"] = vehicle_file_name,
+.... 		["transform"] = transform_matrix, 
+.... 		["simulating"] = is_simulating,
+.... 		["mass"] = mass, 
+.... 		["characters"] = { char_id, char_id... } 
+.... 		["voxels"] = voxel count, 
+.... 		["editable"] = is_editable, 
+.... 		["invulnerable"] = is_invulnerable, 
+.... 		["static"] = is_static, 
+.... 		["components"] = { 
+.... 			["signs"] = { [i] = { SIGN_DATA } 
+.... 			["seats"] = { [i] = { SEAT_DATA }, 
+.... 			["buttons"] = { [i] = { BUTTON_DATA }, 
+.... 			["dials"] = { [i] = { DIAL_DATA } 
+.... 			["tanks"] = { [i] = { TANK_DATA } 
+.... 			["batteries"] = { [i] = { BATTERY_DATA } 
+.... 			["hoppers"] = { [i] = { HOPPER_DATA } 
+.... 			["guns"] = { [i] = { GUN_DATA } 
+.... 			["rope_hooks"] = { [i] = { ROPE_HOOK_DATA } 
+.... 		}
+body Each component contains the following data by default in addition to the type specific data detailed below in their specific get functions
+code V_C_DATA = { 
+.... 			["name"], 
+.... 			["pos"] = { 
+.... 				["x"] = voxel_x, 
+.... 				["y"] = voxel_y, 
+.... 				["z"] = voxel_z 
+.... 			} 
+.... 		}
+.... 	}
+.... 	
+.... 
+body Returns the value of the first tank of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleTank(vehicle_id, tank_name)
+code DATA, is_success = server.getVehicleTank(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		},
+.... 		["value"] = current_held_total, 
+.... 		["values"] = { FLUID_TYPE = amount}, 
+.... 		["capacity"] = total_capacity, 
+.... 		["fluid_type"] = FLUID_TYPE (set in tank properties), 
+.... 	}
+.... 
+.... 	FLUID_TYPE |
+.... 	0 = fresh water,
+.... 	1 = diesel,
+.... 	2 = jet fuel,
+.... 	3 = air,
+.... 	4 = exhaust,
+.... 	5 = oil,
+.... 	6 = sea water,
+.... 	7 = steam,
+.... 	8 = slurry,
+.... 	9 = saturated slurry,
+.... 
+body Returns the data of the first seat of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleSeat(vehicle_id, seat_name)
+code DATA, is_success = server.getVehicleSeat(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		},
+.... 		["seated_id"] = seated_object_id (character or creature),
+.... 		["seated_peer_id"] = seated_peer_id (if character is a player), 
+.... 	}
+.... 
+body Returns the state of the first button of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleButton(vehicle_id, button_name)
+code DATA, is_success = server.getVehicleButton(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		} 
+.... 		["on"] = is_on, 
+.... 	}
+.... 
+body Returns the voxel position of the first sign of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleSign(vehicle_id, sign_name)
+code DATA, is_success = server.getVehicleSign(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		}
+.... 	}
+.... 
+body Returns the value of the first dial of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleDial(vehicle_id, dial_name)
+code DATA, is_success = server.getVehicleDial(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		},
+.... 		["value"] = value_primary, 
+.... 		["value2"] = value_secondary, 
+.... 	}
+.... 
+body Returns the coal count of the first hopper of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleHopper(vehicle_id, hopper_name)
+code DATA, is_success = server.getVehicleHopper(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		},
+.... 		["values"] = { ORE_TYPE = amount}, 
+.... 		["capacity"] = total_capacity, 
+.... 	}
+.... 
+.... ORE_TYPE |
+.... 	0 = coal,
+.... 	1 = iron,
+.... 	2 = aluminium,
+.... 	3 = gold,
+.... 	4 = gold_dirt,
+.... 	5 = uranium,
+.... 	6 = ingot_iron,
+.... 	7 = ingot_steel,
+.... 	8 = ingot_aluminium,
+.... 	9 = ingot_gold_impure,
+.... 	10 = ingot_gold,
+.... 	11 = ingot_uranium,
+.... 
+body Returns the data of the first battery of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleBattery(vehicle_id, battery_name)
+code DATA, is_success = server.getVehicleBattery(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		},
+.... 		["charge"] = current_charge, 
+.... 	}
+.... 
+body Returns the data of the first weapon component of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleWeapon(vehicle_id, name)
+code DATA, is_success = server.getVehicleWeapon(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		},
+.... 		["ammo"] = current_ammo, 
+.... 		["capacity"] = total_ammo_capacity, 
+.... 	}
+.... 
+body Returns the data of the first rope anchor component of the specified name found on the specified vehicle.
+code DATA, is_success = server.getVehicleRopeHook(vehicle_id, name)
+code DATA, is_success = server.getVehicleRopeHook(vehicle_id, voxel_x, voxel_y, voxel_z)
+code DATA = {
+.... 		["name"], 
+.... 		["pos"] = { 
+.... 			["x"] = voxel_x, 
+.... 			["y"] = voxel_y, 
+.... 			["z"] = voxel_z 
+.... 		}
+.... 	}
+.... 
+body Applies a set fluid action to the first tank of the specified name found on the specified vehicle.
+code server.setVehicleTank(vehicle_id, tank_name, amount, FLUID_TYPE)
+.... server.setVehicleTank(vehicle_id, voxel_x, voxel_y, voxel_z, amount, FLUID_TYPE)
+.... 	FLUID_TYPE |
+.... 	0 = fresh water,
+.... 	1 = diesel,
+.... 	2 = jet fuel,
+.... 	3 = air,
+.... 	4 = exhaust,
+.... 	5 = oil,
+.... 	6 = sea water,
+.... 	7 = steam,
+.... 	8 = slurry,
+.... 	9 = saturated slurry,
+.... 
+body Override the inputs to the first seat of the specified name or voxel position found on the specified vehicle. A seated player will prevent overrides.
+code server.setVehicleSeat(vehicle_id, seat_name, axis_w, axis_d, axis_up, axis_right, button1, button2, button3, button4, button5, button6, trigger)
+code server.setVehicleSeat(vehicle_id, voxel_x, voxel_y, voxel_z, axis_w, axis_d, axis_up, axis_right, button1, button2, button3, button4, button5, button6, trigger)
+body Applies a press action to the first button of the specified name found on the specified vehicle.
+code server.pressVehicleButton(vehicle_id, button_name)
+code server.pressVehicleButton(vehicle_id, voxel_x, voxel_y, voxel_z)
+body Applies a set number action to the first keypad of the specified name found on the specified vehicle.
+code server.setVehicleKeypad(vehicle_id, keypad_name, value, (value2))
+code server.setVehicleKeypad(vehicle_id, voxel_x, voxel_y, voxel_z, value, (value2))
+body Sets the number of a specific type of mineral objects inside a hopper of the specified name found on the specified vehicle.
+code server.setVehicleHopper(vehicle_id, hopper_name, amount, ORE_TYPE))
+code server.setVehicleHopper(vehicle_id, voxel_x, voxel_y, voxel_z, amount, ORE_TYPE)
+body Applies a set charge action to the first battery of the specified name found on the specified vehicle. 0 to 1 range.
+code server.setVehicleBattery(vehicle_id, battery_name, amount)
+code server.setVehicleBattery(vehicle_id, voxel_x, voxel_y, voxel_z, amount)
+body Applies a set ammo action to the first weapon component of the specified name found on the specified vehicle. 0 to 1 range.
+code server.setVehicleWeapon(vehicle_id, name, amount)
+code server.setVehicleWeapon(vehicle_id, voxel_x, voxel_y, voxel_z, amount)
+body Spawns a rope between two rope anchors on the specified vehicles at the provided voxel locations.
+code server.spawnVehicleRope(vehicle_id_1, voxel_x_1, voxel_y_1, voxel_z_1, vehicle_id_2, voxel_x_2, voxel_y_2, voxel_z_2, length, ROPE_TYPE)
+.... 	ROPE_TYPE |
+.... 	0 = rope,
+.... 	1 = hose,
+.... 	2 = electric cable,
+.... 	3 = suspension cable,
+.... 
+body Get the number of burning surfaces on a specified vehicle.
+code surface_count, is_success = server.getVehicleFireCount(vehicle_id)
+body Set the default block tooltip of a vehicle to display some text. Blocks with unique tooltips (e.g. buttons) will override this tooltip.
+code is_success = server.setVehicleTooltip(vehicle_id, text)
+body Applies impact damage to a vehicle at the specified voxel location. Damage range is 0-100. Radius is in meters.
+code is_success = server.addDamage(vehicle_id, damage, voxel_x, voxel_y, voxel_z, radius)
+body Returns whether the specified vehicle has finished loading and is simulating.
+code is_simulating, is_success = server.getVehicleSimulating(vehicle_id)
+body Returns whether the specified vehicle is loading, simulating or unloading.
+code is_local, is_success = server.getVehicleLocal(vehicle_id)
+body Sets a vehicle's global transponder to active. (All vehicles have a global transponder that can be active even if a vehicle is not loaded).
+code is_success = server.setVehicleTransponder(vehicle_id, is_active)
+body Sets a vehicle to be editable by players. If a vehicle is spawned by a script it will not have a parent workbench until edited by one (Edit vehicle in zone).
+code is_success = server.setVehicleEditable(vehicle_id, is_editable)
+body Sets a vehicle to be invulnerable to damage.
+code is_success = server.setVehicleInvulnerable(vehicle_id, is_invulnerable)
+body Sets a vehicle to show on the map.
+code is_success = server.setVehicleShowOnMap(vehicle_id, is_show_on_map)
